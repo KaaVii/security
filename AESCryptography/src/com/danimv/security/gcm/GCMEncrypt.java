@@ -4,18 +4,15 @@
 
 package com.danimv.security.gcm;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Arrays;
-
 import javax.crypto.AEADBadTagException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
-
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class GCMEncrypt {
 	private static final Logger logger = Logger.getLogger(GCMEncrypt.class.toString());;
@@ -26,15 +23,13 @@ public class GCMEncrypt {
 
 	public static void main(String[] args) throws Exception {
 
-		BasicConfigurator.configure();
-
 		int testNum = 0; // pass
 
 		if (args.length > 0) {
 			testNum = Integer.parseInt(args[0]);
 			if (testNum < 0 || testNum > 3) {
-				logger.debug("Usage: java AESGCMUpdateAAD2 [X]");
-				logger.debug("X can be 0, 1, 2, 3");
+				logger.info("Usage: java AESGCMUpdateAAD2 [X]");
+				logger.info("X can be 0, 1, 2, 3");
 				System.exit(1);
 			}
 		}
@@ -48,23 +43,23 @@ public class GCMEncrypt {
 		SecretKey key = keyGen.generateKey();
 		// cfa prints key for debug
 		// cfa prints key for debug
-		logger.debug("*** CFA debugs key in byte array: " + key.getEncoded().toString());
+		logger.info("*** CFA debugs key in byte array: " + key.getEncoded().toString());
 		String hexString1 = new BigInteger(1, key.getEncoded()).toString(16);
-		logger.debug("*** CFA debugs key in hexa: " + hexString1);
+		logger.info("*** CFA debugs key in hexa: " + hexString1);
 		// Encrypt
 
 		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
 		final byte[] nonce = new byte[GCM_NONCE_LENGTH];
 		random.nextBytes(nonce);
 		// cfa prints nonce for debug
-		logger.debug("*** CFA debugs nonce in byte array: " + nonce.toString());
+		logger.info("*** CFA debugs nonce in byte array: " + nonce.toString());
 		String hexString2 = new BigInteger(1, nonce).toString(16);
-		logger.debug("*** CFA debugs nonce in hexa: " + hexString2);
+		logger.info("*** CFA debugs nonce in hexa: " + hexString2);
 		GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, nonce);
 		// cfa prints spec for debug
-		logger.debug("*** CFA debugs spec (IV) in byte array: " + spec.getIV().toString());
+		logger.info("*** CFA debugs spec (IV) in byte array: " + spec.getIV().toString());
 		String hexString3 = new BigInteger(1, spec.getIV()).toString(16);
-		logger.debug("*** CFA debugs spec (IV) in hexa: " + hexString3);
+		logger.info("*** CFA debugs spec (IV) in hexa: " + hexString3);
 
 		// Encrypt
 		cipher.init(Cipher.ENCRYPT_MODE, key, spec);
@@ -107,13 +102,13 @@ public class GCMEncrypt {
             	logger.info("Test Failed: expected AEADBadTagException not thrown");
             } else {
                 // check if the decryption result matches
-            	logger.info(Arrays.equals(input, plainText));
+            	logger.info(String.valueOf(Arrays.equals(input, plainText)));
                 if (Arrays.equals(input, plainText)) {
                     logger.info("Test Passed: match!");
-                    logger.debug(new String(plainText));
+                    logger.info(new String(plainText));
                 } else {
                     logger.info("Test Failed: result mismatch!");
-                    logger.debug(new String(plainText));
+                    logger.info(new String(plainText));
                 }
             }
         } catch (AEADBadTagException ex) {

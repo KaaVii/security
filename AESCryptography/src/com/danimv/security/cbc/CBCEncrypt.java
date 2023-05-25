@@ -2,33 +2,27 @@
  * @author danimv 
  * 
  */
-
 package com.danimv.security.cbc;
-
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.logging.Logger;
 
 public class CBCEncrypt {
-	final static Logger logger = Logger.getLogger(CBCEncrypt.class.toString());
+	private final static Logger logger = Logger.getLogger(CBCEncrypt.class.toString());
 
     public static void main(String[] args) throws Exception {
-    	BasicConfigurator.configure();
         String key = "gugudadagugudada";
         String clean = "You can't always get what you want, But if you try sometimes well you might find, You get what you need";
         
         byte[] encrypted = encrypt(clean, key);
-        logger.debug("To be Encrypted: " + clean);
-        logger.debug("Encrypted" + encrypted);
+        logger.info("To be Encrypted: " + clean);
+        logger.info("Encrypted" + encrypted);
         String decrypted = decrypt(encrypted, key);
-        logger.debug("Result : " + decrypted );
+        logger.info("Result : " + decrypted );
     }
 
     public static byte[] encrypt(String plainText, String key) throws Exception {
